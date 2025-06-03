@@ -1,6 +1,8 @@
 services:
   app:
-    image: php:8.2-fpm
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
     container_name: laravel_app
     working_dir: /var/www/test-backend
     volumes:
@@ -12,7 +14,6 @@ services:
       - test-backend
     command: >
       sh -c "chown -R www-data:www-data storage bootstrap/cache && php-fpm"
-
 
   nginx:
     image: nginx:alpine
