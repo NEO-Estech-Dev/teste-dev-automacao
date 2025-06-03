@@ -9,6 +9,14 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    CONST TYPE_RECRUITER = 'RECRUITER';
+    CONST TYPE_CANDIDATE = 'CANDIDATE';
+
+    CONST ALL_TYPES = [
+        self::TYPE_RECRUITER,
+        self::TYPE_CANDIDATE,
+    ];
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -21,6 +29,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'type'
     ];
 
     /**
