@@ -9,11 +9,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('user', function (Blueprint $table) {
+        Schema::create('user', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->enum('type', User::ALL_TYPES);
+            $table->tinyInteger('type');
             $table->string('password');
             $table->softDeletes();
             $table->timestamps();
@@ -22,7 +22,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user');
     }
 };
 
