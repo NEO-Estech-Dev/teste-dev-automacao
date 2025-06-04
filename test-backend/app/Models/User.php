@@ -10,8 +10,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    CONST TYPE_RECRUITER = 'RECRUITER';
-    CONST TYPE_CANDIDATE = 'CANDIDATE';
+    CONST TYPE_RECRUITER = 0;
+    CONST TYPE_CANDIDATE = 1;
 
     CONST ALL_TYPES = [
         self::TYPE_RECRUITER,
