@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class JobFactory extends Factory
 {
-    protected $model = Job::class;
+    protected $table = 'job';
 
     public function definition(): array
     {

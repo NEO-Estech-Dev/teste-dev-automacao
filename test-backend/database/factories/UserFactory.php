@@ -12,8 +12,7 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
-
-    protected $model = User::class;
+    protected $table = 'user';
 
     public function definition(): array
     {
