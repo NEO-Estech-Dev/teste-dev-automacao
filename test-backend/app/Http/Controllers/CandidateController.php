@@ -50,4 +50,15 @@ class CandidateController extends Controller
     {
         return response()->json($this->jobService->getCandidates($job, $request->all()));
     }
+
+    public function cancelApplication(Request $request, Job $job): JsonResponse
+    {
+        $user = $request->user();
+        if (!$this->jobService->hasUserApplied($job, $user)) {
+            return response()->json(['message' => 'User not applied for this job.'], Response::HTTP_FORBIDDEN);
+        }
+
+        $this->jobService->cancelApplication($user, $job);
+        return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
 }

@@ -16,6 +16,7 @@ Route::middleware('jwt.auth')->group(function (): void {
     Route::patch('jobs/{job}/pause', [JobController::class, 'pause']);
     
     Route::post('jobs/{job}/apply', [CandidateController::class, 'apply']);
+    Route::delete('jobs/{job}/cancel', [CandidateController::class, 'cancelApplication']);
     Route::get('jobs/{job}/appliedJobs', [CandidateController::class, 'appliedJobs']);
     Route::get('jobs/{job}/candidates', [CandidateController::class, 'candidates']);
     Route::get('jobs/{job}/candidates/{user}', [CandidateController::class, 'show']);

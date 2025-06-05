@@ -154,5 +154,14 @@ class JobService
             ]
         ];
     }
+
+    public function cancelApplication(User $user, Job $job): void
+    {
+        if (!$this->hasUserApplied($job, $user)) {
+            throw new \Exception('User not applied for this job');
+        }
+
+        $job->candidates()->detach($user->id);
+    }
 }
 
