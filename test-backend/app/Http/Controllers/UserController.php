@@ -19,6 +19,10 @@ class UserController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $user = $request->user();
+        if ($user->type != User::TYPE_ADMIN) {
+            response()->json(['error' => 'user is not admin'], Response::HTTP_UNAUTHORIZED);
+        }
         $users = $this->userService->list($request->all());
         return response()->json($users);
     }
