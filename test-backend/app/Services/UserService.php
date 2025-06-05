@@ -64,6 +64,6 @@ class UserService
         }
 
         $perPage = min(20, ($filters['perPage'] ?? 20));
-        return $query->paginate($perPage, ['name', 'email', 'type']);
+        return $query->paginate($perPage, ['name', 'email', 'type'], 'page', max(1, $filters['page'] ?? 1));
     }
 }
