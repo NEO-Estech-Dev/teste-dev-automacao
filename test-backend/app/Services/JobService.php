@@ -75,5 +75,19 @@ class JobService
             throw new \Exception('Unauthorized action on this job');
         }
     }
+
+    public function apply(Job $job, User $user, array $data): void
+    {
+        if ($user->type !== User::TYPE_CANDIDATE) {
+            throw new \Exception('User is not a candidate');
+        }
+
+        if ($job->isPaused()) {
+            throw new \Exception('Job is paused');
+        }
+
+        $job->candidates()->attach($user->id);
+        // Save resume and coverLetter on S3 in a separate service
+    }
 }
 

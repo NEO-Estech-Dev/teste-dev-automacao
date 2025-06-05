@@ -40,4 +40,9 @@ class Job extends Model
     {
         return $this->belongsToMany(User::class, 'job_user');
     }
+
+    public function isPaused(): bool
+    {
+        return (bool) $this->paused;
+    }
 }

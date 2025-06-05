@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\UserController;
 
@@ -13,4 +14,6 @@ Route::middleware('jwt.auth')->group(function (): void {
 
     Route::apiResource('jobs', JobController::class);
     Route::patch('jobs/{job}/pause', [JobController::class, 'pause']);
+    
+    Route::post('jobs/{job}/apply', [CandidateController::class, 'apply']);
 });
