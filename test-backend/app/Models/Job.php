@@ -31,6 +31,10 @@ class Job extends Model
         'paused',
     ];
 
+    protected $hidden = [
+        'pivot',
+    ];
+
     public function recruiter()
     {
         return $this->belongsTo(User::class, 'user_id');

@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
     CONST TYPE_RECRUITER = 0;
     CONST TYPE_CANDIDATE = 1;
 
@@ -43,6 +44,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'pivot',
     ];
 
     /**
@@ -56,5 +58,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function appliedJobs()
+    {
+        return $this->belongsToMany(Job::class, 'job_user');
     }
 }

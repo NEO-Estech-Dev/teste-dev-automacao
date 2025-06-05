@@ -89,5 +89,78 @@ class JobService
         $job->candidates()->attach($user->id);
         // Save resume and coverLetter on S3 in a separate service
     }
+
+    public function getCandidates(Job $job, array $filters): array 
+    {
+        $query = $job->candidates();
+
+        if (isset($filters['search'])) {
+            $search = '%' . $filters['search'] . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', $search)
+                  ->orWhere('email', 'like', $search);
+            });
+        }
+
+        $perPage = min(20, ($filters['perPage'] ?? 20));
+        $page = max(1, $filters['page'] ?? 1);
+        return $query->paginate($perPage, ['user.id', 'user.name', 'user.email'], 'page', $page)->toArray();
+    }
+
+    public function getAppliedJobs(User $user, array $filters = []): array
+    {
+        $query = $user->appliedJobs()->with('recruiter');
+        if (isset($filters['type'])) {
+            $query->where('type', $filters['type']);
+        }
+
+        if (isset($filters['paused'])) {
+            $query->where('paused', $filters['paused']);
+        }
+
+        if (isset($filters['title'])) {
+            $query->where('title', 'like', '%' . $filters['title'] . '%');
+        }
+
+        $perPage = min(20, ($filters['perPage'] ?? 20));
+        $page = max(1, $filters['page'] ?? 1);
+        $result = $query->paginate($perPage, ['job.id', 'job.title', 'job.type', 'job.paused'], 'page', $page);
+        $result->getCollection()->makeHidden(['recruiter']);
+        return $result->toArray();
+    }
+
+    public function hasUserApplied(Job $job, User $user): bool
+    {
+        return $job->candidates()->where('user_id', $user->id)->exists();
+    }
+
+    public function getJobDetails(Job $job, User $user): ?array
+    {
+        if (!$this->hasUserApplied($job, $user)) {
+            return null;
+        }
+
+        return [
+            'job' => [
+                'id' => $job->id,
+                'title' => $job->title,
+                'description' => $job->description,
+                'type' => $job->type,
+                'paused' => $job->isPaused(),
+            ],
+            'candidate' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'coverLetter' => 'xpto',
+                'resume' => [
+                    'url' => sprintf('https://s3.example.com/jobs/%s/resumes/%s/resume.pdf', $job->id, $user->id),
+                    'filename' => 'resume.pdf',
+                    'size' => 2048000,
+                ]
+            ],
+            'applied_at' => $job->candidates()->where('user_id', $user->id)->first()->pivot->created_at,
+        ];
+    }
 }
 
