@@ -31,8 +31,7 @@ class JwtAuthMiddleware
         }
 
         try {
-            $token = $this->jwtService->validateToken($tokenStr);
-            if (!$token) {
+            if (!$this->jwtService->validateToken($tokenStr)) {
                 return response()->json(['error' => 'Token inválido'], Response::HTTP_UNAUTHORIZED);
             }
 
