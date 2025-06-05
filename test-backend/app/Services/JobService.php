@@ -5,38 +5,44 @@ namespace App\Services;
 use App\Models\Job;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class JobService
 {
     public function list(array $filters = []): LengthAwarePaginator
     {
-        $query = Job::query();
+        $cacheKey = 'list_jobs_'.md5(json_encode($filters));
 
-        if (isset($filters['type'])) {
-            $query->where('type', $filters['type']);
-        }
+        $jobs = Cache::remember($cacheKey, now()->addMinutes(10), function () use($filters) {
+            $query = Job::query();
 
-        if (isset($filters['paused'])) {
-            $query->where('paused', $filters['paused']);
-        }
+            if (isset($filters['type'])) {
+                $query->where('type', $filters['type']);
+            }
 
-        if (isset($filters['search'])) {
-            $query->where('title', 'like', '%' . $filters['search'] . '%');
-        }
+            if (isset($filters['paused'])) {
+                $query->where('paused', $filters['paused']);
+            }
 
-        if (isset($filters['deleted']) && $filters['deleted']) {
-            $query->withTrashed();
-        } else {
-            $query->whereNull('deleted_at');
-        }
+            if (isset($filters['search'])) {
+                $query->where('title', 'like', '%' . $filters['search'] . '%');
+            }
 
-        if (isset($filters['orderBy'])) {
-            $query->orderBy($filters['orderBy'], $filters['direction'] ?? 'asc');
-        }
+            if (isset($filters['deleted']) && $filters['deleted']) {
+                $query->withTrashed();
+            } else {
+                $query->whereNull('deleted_at');
+            }
 
-        $perPage = min(20, ($filters['perPage'] ?? 20));
-        return $query->paginate($perPage, ['id', 'title', 'description', 'type', 'created_at'], 'page', max(1, $filters['page'] ?? 1));
+            if (isset($filters['orderBy'])) {
+                $query->orderBy($filters['orderBy'], $filters['direction'] ?? 'asc');
+            }
+
+            $perPage = min(20, ($filters['perPage'] ?? 20));
+            return $query->paginate($perPage, ['id', 'title', 'description', 'type', 'created_at'], 'page', max(1, $filters['page'] ?? 1));
+        });
+
+        return $jobs;
     }
 
     public function create(User $user, array $data): Job
