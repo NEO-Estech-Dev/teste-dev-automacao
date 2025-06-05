@@ -38,7 +38,7 @@ class UserService
         return User::where('email', $email)->first();
     }
 
-    public function list(array $filters = [])
+    public function list(array $filters = []): LengthAwarePaginator
     {
         $query = User::query();
         if (isset($filters['type'])) {
