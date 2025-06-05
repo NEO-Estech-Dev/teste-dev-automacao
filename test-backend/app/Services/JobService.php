@@ -141,14 +141,7 @@ class JobService
         }
 
         return [
-            'job' => [
-                'id' => $job->id,
-                'title' => $job->title,
-                'description' => $job->description,
-                'type' => $job->type,
-                'paused' => $job->isPaused(),
-            ],
-            'candidate' => [
+           'candidate' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
@@ -158,8 +151,7 @@ class JobService
                     'filename' => 'resume.pdf',
                     'size' => 2048000,
                 ]
-            ],
-            'applied_at' => $job->candidates()->where('user_id', $user->id)->first()->pivot->created_at,
+            ]
         ];
     }
 }
