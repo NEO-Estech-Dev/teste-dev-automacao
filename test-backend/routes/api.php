@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JobController;
 use App\Http\Controllers\UserController;
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -9,4 +10,7 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('jwt.auth')->group(function (): void {
     Route::apiResource('users', UserController::class);
+
+    Route::apiResource('jobs', JobController::class);
+    Route::patch('jobs/{job}/pause', [JobController::class, 'pause']);
 });
