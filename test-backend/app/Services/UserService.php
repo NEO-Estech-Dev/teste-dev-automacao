@@ -59,8 +59,8 @@ class UserService
             $query->whereNull('deleted_at');
         }
 
-        if (isset($filters['order_by'])) {
-            $query->orderBy($filters['order_by'], $filters['direction'] ?? 'asc');
+        if (isset($filters['orderBy'])) {
+            $query->orderBy($filters['orderBy'], $filters['direction'] ?? 'asc');
         }
 
         $perPage = min(20, ($filters['perPage'] ?? 20));
