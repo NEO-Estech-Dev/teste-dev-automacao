@@ -40,30 +40,35 @@ class UserService
 
     public function list(array $filters = []): LengthAwarePaginator
     {
-        $query = User::query();
-        if (isset($filters['type'])) {
-            $query->where('type', $filters['type']);
-        }
+        $cacheKey = 'user_list_'.json_encode($filters);
+        $users = Cache::remember($cacheKey, now()->addMinutes(10), function() use($filters) {
+            $query = User::query();
+            if (isset($filters['type'])) {
+                $query->where('type', $filters['type']);
+            }
 
-        if (isset($filters['search'])) {
-            $search = '%' . $filters['search'] . '%';
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', $search)
-                  ->orWhere('email', 'like', $search);
-            });
-        }
+            if (isset($filters['search'])) {
+                $search = '%' . $filters['search'] . '%';
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', $search)
+                    ->orWhere('email', 'like', $search);
+                });
+            }
 
-        if (isset($filters['deleted']) && $filters['deleted']) {
-            $query->withTrashed();
-        } else {
-            $query->whereNull('deleted_at');
-        }
+            if (isset($filters['deleted']) && $filters['deleted']) {
+                $query->withTrashed();
+            } else {
+                $query->whereNull('deleted_at');
+            }
 
-        if (isset($filters['orderBy'])) {
-            $query->orderBy($filters['orderBy'], $filters['direction'] ?? 'asc');
-        }
+            if (isset($filters['orderBy'])) {
+                $query->orderBy($filters['orderBy'], $filters['direction'] ?? 'asc');
+            }
 
-        $perPage = min(20, ($filters['perPage'] ?? 20));
-        return $query->paginate($perPage, ['name', 'email', 'type'], 'page', max(1, $filters['page'] ?? 1));
+            $perPage = min(20, ($filters['perPage'] ?? 20));
+            return $query->paginate($perPage, ['name', 'email', 'type'], 'page', max(1, $filters['page'] ?? 1));
+        });
+
+        return $users;
     }
 }
