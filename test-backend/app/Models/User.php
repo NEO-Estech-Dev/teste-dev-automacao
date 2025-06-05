@@ -13,10 +13,12 @@ class User extends Authenticatable
 
     CONST TYPE_RECRUITER = 0;
     CONST TYPE_CANDIDATE = 1;
+    CONST TYPE_ADMIN = 2;
 
     CONST ALL_TYPES = [
         self::TYPE_RECRUITER,
         self::TYPE_CANDIDATE,
+        self::TYPE_ADMIN,
     ];
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
