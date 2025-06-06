@@ -17,9 +17,9 @@ Essa aplicação foi desenvolvida utilizando:
 ### 1. Clone o repositório e acesse o diretório
 
 ```bash
-git clone https://github.com/seu-usuario/teste-dev-estech.git
+git clone https://github.com/potatowski/teste-dev-estech.git
 cd teste-dev-estech
-git checkout nome-completo
+git checkout joao-vitor-lima-da-rocha
 ```
 ### 2. Crie um arquivo `.env` a partir do `.env.example`
 
