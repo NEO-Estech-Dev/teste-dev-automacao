@@ -23,4 +23,5 @@ Route::middleware('jwt.auth')->group(function (): void {
     Route::get('jobs/{job}/candidates/{user}', [CandidateController::class, 'show']);
 
     Route::post('/import', [ImportController::class, 'import']);
+    Route::get('/temperature/report', [ImportController::class, 'report']);
 });
