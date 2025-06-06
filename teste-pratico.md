@@ -1,82 +1,67 @@
-#  Teste para candidatos à vaga de Desenvolvedor PHP Estech
+# Teste prático - Estech
 
-Olá caro desenvolvedor, nesse teste analisaremos seu conhecimento geral e inclusive velocidade de desenvolvimento. Abaixo explicaremos tudo o que será necessário.
+## Informações da entrega
 
-##  Instruções
+Essa aplicação foi desenvolvida utilizando:
 
-O desafio consiste em implementar uma aplicação API Rest utilizando o framework PHP Laravel, um banco de dados relacional (Mysql), que terá como finalidade a inscrição de candidatos a uma oportunidade de emprego.
+- PHP 8.2
+- Laravel 12.16
+- MySQL
+- Redis
+- Docker & Docker Compose
+- Supervisor
+- Composer
 
-Sua aplicação deve possuir:
+## Instruções para rodar o projeto
 
-- CRUD de usuários:
-	- Criar, editar, excluir e listar usuários.
-	- O usuário pode ser Recrutador ou Candidato.
+### 1. Clone o repositório e acesse o diretório
 
-- CRUD de vagas:
-	- Criar, editar, excluir e listar vagas.
-	- A vaga pode ser CLT, Pessoa Jurídica ou Freelancer.
+```bash
+git clone https://github.com/seu-usuario/teste-dev-estech.git
+cd teste-dev-estech
+git checkout nome-completo
+```
+### 2. Crie um arquivo `.env` a partir do `.env.example`
 
-- CRUD de candidatos:
-	- Criar, editar, excluir e listar candidatos.
-	- Um candidato pode se inscrever em uma ou mais vagas.
-	- Deve ser ser possível "pausar" a vaga, evitando a inscrição de candidatos (Somente Recrutador).
+```bash
+cp .env.example .env
+```
 
-- Cada CRUD:
-	- Deve ser filtrável e ordenável por qualquer campo, e possuir paginação de 20 itens.
-	- Deve implementar SoftDelete.
-	- Implementar validações de campos obrigatórios e tipos de dados.
-	- Implementar Cache utilizando Redis.
-	- Testes automatizados.
+### 3. Configure as variáveis de ambiente no arquivo `.env`
+Edite o arquivo `.env` com as configurações necessárias, como banco de dados, cache, etc. Certifique-se de que as variáveis estejam corretas para o seu ambiente.
 
-- Criar um comando para importação de dados a partir [deste arquivo](/example.csv) csv:
-	- Deve ser implementado de maneira assincrona, utilizando Jobs. 	
-	- Criar a tabela para armazenar os dados a serem importados.		 	
-	- Criar um endpoint para retornar uma análise dos dados importados e executar os seguintes cálculos:
-		- Separar os cálculos pelo dia da data registrada.
-		- Média.
-		- Mediana.
-		- Valor mínimo.
-		- Valor máximo.
-		- % acima de 10.
-		- % abaixo de -10.
-		- % entre -10 e 10.
+Comando para gerar a chave de aplicação JWT:
+```bash
+php -r "echo bin2hex(random_bytes(32));"
+```
+### 4. Rode o comando docker-compose para subir os containers
 
-##  Banco de dados
+```bash
+docker-compose up -d
+```
 
-- O banco de dados deve ser criado utilizando Migrations do framework Laravel, e também utilizar Seeds e Factorys para popular as informações no banco de dados.
+### 5. Rode as migrations, seeders 
 
-##  Tecnologias a serem utilizadas
+```bash
+docker compose exec app php artisan migrate --seed
+```
 
-Devem ser utilizadas as seguintes tecnologias:
-	- PHP
-	- Framework Laravel
-	- Docker (construção do ambiente de desenvolvimento)
-	- Mysql
-	- Redis
- 	- Supervisor
+## Funcionalidades implementadas
+- CRUD de Usuários
+- Usuário pode ser Recrutador ou Candidato
+- CRUD de Vagas (CLT, PJ, Freelancer)
+- CRUD de Candidatos
+- Candidato pode se inscrever em várias vagas
+- Vagas podem ser pausadas (somente Recrutador)
+- Filtros e ordenação em todos os CRUDs
+- Paginação (default 20, customizável)
+- Soft Deletes
+- Cache com Redis
+- Importação assíncrona via Job a partir de arquivo CSV enviado via API
+- Endpoint de análise com cálculos por dia
+- Docker + Docker Compose configurado
+- Supervisor configurado para workers
 
-##  Entrega
+## Endpoints (Postman Collection)
 
-- Para iniciar o teste, faça um fork deste repositório; **Se você apenas clonar o repositório não vai conseguir fazer push.**
-
-- Crie uma branch com o seu nome completo;
-- Altere o arquivo teste-pratico.md com as informações necessárias para executar o seu teste (comandos, migrations, seeds, etc);
-
-- Depois de finalizado, envie-nos o pull request;
-
-##  Bônus
-
-- Permitir deleção em massa de itens nos CRUDs.
-- Permitir que o número de itens por página possa ser definido.
-- Implementar autenticação de usuário na aplicação usando sanctum.
-
-##  O que será analisado?
-
-- Organização do código;
-- Aplicação de design patterns;
-- Raciocínio lógico;
-- Aplicação de testes;
-- Legibilidade;
-- Criação do ambiente com Docker.
-
-###  Boa sorte!
+A coleção do Postman está disponível na raiz do repositório. Você pode importar essa coleção para testar os endpoints da API.
