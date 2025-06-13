@@ -1,0 +1,136 @@
+---
+description:
+globs: cursor_php_style_guide.md
+alwaysApply: false
+---
+# Cursor IDE PHP Style Guide
+
+Este guia define as regras e convenções de código que a IDE Cursor deve sugerir/aplicar em seu projeto PHP (8.2 → 12) com MySQL.
+
+---
+
+## 1. Estrutura de Pastas e Namespaces
+
+- **Controllers**
+  - Diretório: `app/Http/Controllers`
+  - Namespace: `App\Http\Controllers`
+- **Services**
+  - Diretório: `app/Services`
+  - Namespace: `App\Services`
+- **Models**
+  - Diretório: `app/Models`
+  - Namespace: `App\Models`
+- **Migrations**
+  - Diretório: `database/migrations`
+
+---
+
+## 2. Controllers
+
+- **Propósito**: receber `Request`, delegar toda **regra de negócio** à camada _Service_, e retornar `Response`.
+- **Assinatura**:
+  ```php
+  public function nomeDoMetodo(Request $request): Response
+  ```
+- **Regras**:
+  - **Sempre** injetar o objeto `Request`.
+  - **Evitar** uso de `else`. Use _guard clauses_:
+    ```php
+    if (! $user->isActive()) {
+        return response()->json(['error' => 'User inactive'], 403);
+    }
+    // resto do método...
+    ```
+  - Documente variações de dados via _PHPDoc_ ou anotações acima do método.
+
+---
+
+## 3. Services
+
+- **Propósito**: concentrar toda a lógica de negócio.
+- **Assinatura**:
+  ```php
+  class UsuarioService
+  {
+      public function criarUsuario(array $data): Usuario
+      {
+          // lógica aqui...
+      }
+  }
+  ```
+- **Regras**:
+  - Métodos em **camelCase**.
+  - Injetar dependências via construtor:
+    ```php
+    public function __construct(UserRepository $repo) { … }
+    ```
+
+---
+
+## 4. Models
+
+- **Propósito**: representar entidades e relacionamentos Eloquent.
+- **Regras**:
+  - Nome da classe em **PascalCase** (e.g. `User`, `OrderItem`).
+  - Nome da tabela sempre **plural** (e.g. `users`, `order_items`).
+    - Caso seja diferente, declare:
+      ```php
+      protected $table = 'minha_tabela';
+      ```
+  - **Sempre** definir relacionamentos:
+    ```php
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+    ```
+
+---
+
+## 5. Requests (FormRequest)
+
+- **Diretório**: `app/Http/Requests`
+- **Uso**:
+  ```php
+  public function store(UserRequest $request)
+  ```
+- **Regras**:
+  - Centralizar validações em classes _Request_.
+  - Métodos: `rules()`, `authorize()`.
+
+---
+
+## 6. Migrations
+
+- **Comando sugerido** (sem editar timestamp manualmente):
+  ```bash
+  php artisan make:migration create_<table>_table --create=<table>
+  ```
+- **Regras**:
+  - Não alterar o prefixo de timestamp gerado.
+  - Nome do arquivo: `YYYY_MM_DD_HHMMSS_create_<table>_table.php`.
+
+---
+
+## 7. Convenções de Nomenclatura
+
+| Tipo               | Formato     | Exemplo               |
+| ------------------ | ----------- | --------------------- |
+| **Classes**        | PascalCase  | `UserService`        |
+| **Controllers**    | PascalCase  | `OrderController`    |
+| **Métodos/Funções**| camelCase   | `calculateTotal()`   |
+| **Variáveis**      | camelCase   | `$orderAmount`       |
+| **Constants**      | UPPER_SNAKE | `MAX_UPLOAD_SIZE`    |
+
+---
+
+## 8. Boas Práticas Gerais
+
+- **Sem `else`**: use retornos antecipados (_early returns_).
+- **Injeção de Dependência**: nunca use `new` diretamente para _Services_ ou _Repositories_.
+- **Comentários**: evite comentar código óbvio; prefira PHPDoc para classes e métodos públicos.
+- **Transações**: ao alterar múltiplas tabelas, utilize `DB::transaction()`.
+
+
+- Seguir como base relevante o arquivo na raiz do projeto chamado teste-pratico.md
+---
