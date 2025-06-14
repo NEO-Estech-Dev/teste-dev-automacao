@@ -19,7 +19,7 @@ class CandidatesController extends Controller
         if(Cache::has('candidates')) {
             $candidates = Cache::get('candidates');
 
-            return $candidates;
+            return response()->json($candidates, 200);
         }else{
             Cache::remember('candidates', 60, function() {
                 return Candidate::where('active', Candidate::ACTIVE)->paginate(20);
@@ -27,7 +27,7 @@ class CandidatesController extends Controller
 
             $candidates = Cache::get('candidates');
 
-            return $candidates;
+            return response()->json($candidates, 200);
         }
     }
 
@@ -40,11 +40,10 @@ class CandidatesController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'main_language_programming' => 'required|string',
-            'linkedin' => 'required|string',
-            'description' => 'required|string',
-            'github' => 'required|string',
+            'cpf' => 'required|string|max:15',
             'phone' => 'required|string|max:11|min:11',
+            'linkedin' => 'required|string',
+            'github' => 'required|string',
             'user_id' => 'required|integer|min:1|exists:users,id',
         ]);
 
@@ -56,16 +55,14 @@ class CandidatesController extends Controller
         }
 
         Candidate::create([
-            'main_language_programming' => $request->input('main_language_programming'),
+            'cpf' => $request->input('cpf'),
+            'phone' => $request->input('phone'),
             'linkedin' => $request->input('linkedin'),
             'github' => $request->input('github'),
-            'description' => $request->input('description'),
-            'phone' => $request->input('phone'),
-            'next_phase' => $request->input('next_phase'),
             'user_id' => $request->input('user_id'),
         ]);
 
-        return response()->json(['message' => 'Candidate was created'], 200);
+        return response()->json(['message' => 'Candidate was created'], 201);
     }
 
     /**
@@ -92,7 +89,7 @@ class CandidatesController extends Controller
         $candidate = Candidate::find($id);
 
         if($candidate) {
-            return $candidate;
+            return response()->json($candidate, 200);
         }
 
         return response()->json(['message' => 'Candidate not found'], 404);
@@ -137,11 +134,10 @@ class CandidatesController extends Controller
         $request->merge(['id' => $request->route('id')]);
 
         $validator = Validator::make($request->all(), [
-            'main_language_programming' => 'required|string|max:100',
-            'linkedin' => 'required|string|max:255',
-            'github' => 'required|string|max:255',
+            'cpf' => 'required|string|max:15',
             'phone' => 'required|string|max:11|min:11',
-            'next_phase' => 'required|integer|min:1',
+            'linkedin' => 'required|string',
+            'github' => 'required|string',
             'user_id' => 'required|integer|min:1|exists:users,id',
         ]);
 
@@ -155,16 +151,15 @@ class CandidatesController extends Controller
         $candidate = Candidate::find($id);
 
         if($candidate) {
-            $candidate->main_language_programming = $request->input('main_language_programming');
+            $candidate->cpf = $request->input('cpf');
+            $candidate->phone = $request->input('phone');
             $candidate->linkedin = $request->input('linkedin');
             $candidate->github = $request->input('github');
-            $candidate->phone = $request->input('phone');
-            $candidate->next_phase = $request->input('next_phase');
             $candidate->user_id = $request->input('user_id');
 
             $candidate->update();
 
-            return $candidate;
+            return response()->json($candidate, 200);
         }
 
         return response()->json(['message' => 'Candidate not found'], 404);

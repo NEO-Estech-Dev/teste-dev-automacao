@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -22,7 +21,7 @@ class UserController extends Controller
         if(Cache::has('users')) {
             $users = Cache::get('users');
 
-            return $users;
+            return response()->json($users, 200);
         }else{
             Cache::remember('users', 60, function() {
                 return User::where('active', User::ACTIVE)->paginate(20);
@@ -30,7 +29,7 @@ class UserController extends Controller
 
             $users = Cache::get('users');
 
-            return $users;
+            return response()->json($users, 200);
         }
     }
 
@@ -92,7 +91,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if($user) {
-            return $user;
+            return response()->json($user, 200);
         }
 
         return response()->json(['message' => 'User not found'], 404);
@@ -161,7 +160,7 @@ class UserController extends Controller
 
             $user->update();
 
-            return $user;
+            return response()->json($user, 200);
         }
 
         return response()->json(['message' => 'User not found'], 404);

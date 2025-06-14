@@ -31,23 +31,6 @@ class VacancyControllerTest extends TestCase
     }
 
     /**
-     * A basic feature to subscribe in vacancy.
-     *
-     * @return void
-     */
-    public function test_subscribe_vacancy()
-    {
-        $vacancy = [
-            "title_vacancy_job" => "Vaga Backend Pleno",
-	        "company_name" => "Google"
-        ];
-
-        $response = $this->putJson('/api/vacancies/subscribe/1', $vacancy);
-
-        $response->assertStatus(200);
-    }
-
-    /**
      * A basic feature to create user.
      *
      * @return void
@@ -56,7 +39,8 @@ class VacancyControllerTest extends TestCase
     {
         $vacancy = [
             "title_vacancy_job" => "Vaga Backend Pleno",
-	        "description_vacancy_job" => "Vaga para desenvolvedor backend pleno. Solicitado 2 salários minimos.",
+	        "location_vacancy_job" => "Campinas",
+	        "salary_vacancy_job" => 3000.00,
 	        "type_vacancy_job" => 0,
 	        "company_name" => "Google"
         ];
@@ -75,12 +59,13 @@ class VacancyControllerTest extends TestCase
     {
         $vacancy = [
             "title_vacancy_job" => "Vaga Backend Pleno",
-	        "description_vacancy_job" => "Vaga para desenvolvedor backend pleno. Solicitado 2 salários minimos.",
+	        "location_vacancy_job" => "Jundiai",
+	        "salary_vacancy_job" => 7000.00,
 	        "type_vacancy_job" => 0,
 	        "company_name" => "Amazon"
         ];
 
-        $response = $this->putJson('/api/vacancies/update/8', $vacancy);
+        $response = $this->putJson('/api/vacancies/update/5', $vacancy);
 
         $response->assertStatus(200);
     }
@@ -92,7 +77,7 @@ class VacancyControllerTest extends TestCase
      */
     public function test_delete_vacancy()
     {
-        $response = $this->delete('/api/vacancy/delete/6');
+        $response = $this->delete('/api/vacancies/delete/6');
 
         $response->assertStatus(200);
     }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicationsController;
 use App\Http\Controllers\CandidatesController;
 use App\Http\Controllers\TemperatureController;
 use App\Http\Controllers\UserController;
@@ -58,4 +59,12 @@ Route::prefix('candidates')->group(function() {
     Route::get('/{id}', [CandidatesController::class,'show']);
     Route::put('/update/{id}', [CandidatesController::class,'update']);
     Route::delete('/delete/{id}', [CandidatesController::class,'destroy']);
+});
+
+Route::prefix('applications')->group(function() {
+    Route::get('/', [ApplicationsController::class,'index']);
+    Route::post('/store', [ApplicationsController::class,'store']);
+    Route::get('/{id}', [ApplicationsController::class,'show']);
+    Route::put('/update/{id}', [ApplicationsController::class,'update']);
+    Route::delete('/delete/{id}', [ApplicationsController::class,'destroy']);
 });

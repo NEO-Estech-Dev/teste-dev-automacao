@@ -5,24 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vacancy extends Model
+class Application extends Model
 {
     use HasFactory;
 
-    const ACTIVE = 1;
-    const DESACTIVATE = 0;
+    protected $table = "tbl_applications";
 
-    protected $table = "tbl_vacancies_job";
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'title_vacancy_job',
-        'location_vacancy_job',
-        'salary_vacancy_job',
-        'company_name',
-        'type_vacancy_job',
+        'vacancy_id',
+        'candidate_id'
     ];
 }

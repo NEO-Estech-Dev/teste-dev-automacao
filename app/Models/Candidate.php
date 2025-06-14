@@ -13,17 +13,17 @@ class Candidate extends Model
     const DESACTIVATE = 0;
 
     protected $table = "tbl_candidates";
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'main_language_programming',
-        'linkedin',
-        'description',
-        'github',
+        'cpf',
         'phone',
+        'linkedin',
+        'github',
         'user_id'
     ];
 }
