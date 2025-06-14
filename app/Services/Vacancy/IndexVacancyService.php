@@ -24,10 +24,10 @@ class IndexVacancyService
                 return $query->where('recruiter_id', $recruiterId);
             })
             ->when($title, function ($query) use ($title) {
-                return $query->where('title', 'like', '%' . $title . '%');
+                return $query->where('title', 'like', '%'.$title.'%');
             })
             ->when($description, function ($query) use ($description) {
-                return $query->where('description', 'like', '%' . $description . '%');
+                return $query->where('description', 'like', '%'.$description.'%');
             })
             ->when($salaryMin, function ($query) use ($salaryMin) {
                 return $query->where('salary', '>=', $salaryMin);

@@ -16,18 +16,17 @@ class VacancyController extends Controller
     public function index(
         IndexVacancyRequest $request,
         IndexVacancyService $service
-    )
-    {
+    ) {
         $data = $request->validated();
         $vacancies = $service->run($data);
+
         return response()->json($vacancies, 200);
     }
 
     public function store(
         StoreVacancyRequest $request,
         StoreVacancyService $service,
-    )
-    {
+    ) {
         $data = $request->validated();
         $vacancy = $service->run($data);
 
@@ -38,8 +37,7 @@ class VacancyController extends Controller
         UpdateVacancyRequest $request,
         Vacancy $vacancy,
         UpdateVacancyService $service
-    )
-    {
+    ) {
         $data = $request->validated();
         $updatedVacancy = $service->run($data, $vacancy);
 

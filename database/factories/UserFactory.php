@@ -11,7 +11,6 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
-
     protected static ?string $password;
 
     public function definition(): array
@@ -26,7 +25,6 @@ class UserFactory extends Factory
             'created_at' => fake()->dateTimeBetween(now()->subYear(), now()),
         ];
     }
-
 
     public function unverified(): static
     {

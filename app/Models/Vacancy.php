@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Vacancy extends Model
 {
     use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'title',
         'description',

@@ -12,7 +12,7 @@ class IndexVacancyRequest extends FormRequest
             'search' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'salary_min' => ['nullable', 'numeric', 'min:0'],
-            'salary_max' => ['nullable', 'numeric', 'min:0','gte:salary_min'],
+            'salary_max' => ['nullable', 'numeric', 'min:0', 'gte:salary_min'],
             'type' => ['nullable', 'string', 'in:employee,independent_contractor,freelancer'],
             'status' => ['nullable', 'string', 'in:open,closed,paused,open'],
             'recruiter_id' => ['nullable', 'integer', 'exists:users,id,type,recruiter'],

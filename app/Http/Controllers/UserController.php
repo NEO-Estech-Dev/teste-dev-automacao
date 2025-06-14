@@ -16,18 +16,17 @@ class UserController extends Controller
     public function index(
         IndexUserRequest $request,
         IndexUserService $service
-    )
-    {
+    ) {
         $data = $request->validated();
         $users = $service->run($data);
+
         return response()->json($users, 200);
     }
 
     public function store(
         StoreUserRequest $request,
         StoreUserService $service,
-    )
-    {
+    ) {
         $data = $request->validated();
         $user = $service->run($data);
 
@@ -38,8 +37,7 @@ class UserController extends Controller
         UpdateUserRequest $request,
         User $user,
         UpdateUserService $service
-    )
-    {
+    ) {
         $data = $request->validated();
         $updatedUser = $service->run($user, $data);
 

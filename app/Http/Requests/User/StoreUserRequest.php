@@ -19,7 +19,7 @@ class StoreUserRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            if($this->type){
+            if ($this->type) {
                 if ($this->type !== 'recrutador' && $this->type !== 'candidato') {
                     $validator->errors()->add('type', 'O tipo deve ser recrutador ou candidato.');
                 }

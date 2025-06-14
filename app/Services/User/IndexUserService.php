@@ -17,8 +17,8 @@ class IndexUserService
 
         $query = User::query()
             ->when($name, function ($query) use ($name) {
-            $query->where('name', 'like', '%' . $name . '%');
-        })
+                $query->where('name', 'like', '%'.$name.'%');
+            })
             ->when($type, function ($query) use ($type) {
                 $query->where('type', $type);
             })

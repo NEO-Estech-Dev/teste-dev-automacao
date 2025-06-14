@@ -6,11 +6,10 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateVacancyRequest extends FormRequest
 {
-
-//    public function authorize(): bool
-//    {
-//        return $this->user()->isRecruiter();
-//    }
+    //    public function authorize(): bool
+    //    {
+    //        return $this->user()->isRecruiter();
+    //    }
     public function rules(): array
     {
         return [
