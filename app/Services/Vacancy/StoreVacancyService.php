@@ -15,6 +15,8 @@ class StoreVacancyService
 
     public function run(array $data)
     {
+        $data['recruiter_id'] = auth()->id();
+
         return $this->vacancy->create($data);
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -38,8 +38,8 @@ class User extends Authenticatable
         return $this->type === 'recruiter';
     }
 
-    public function vacancies(): HasMany
+    public function vacancies(): BelongsToMany
     {
-        return $this->hasMany(Vacancy::class, 'recruiter_id', 'id');
+        return $this->belongsToMany(Vacancy::class, 'user_vacancy', 'user_id', 'vacancy_id');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyVacancyRequest;
 use App\Http\Requests\Vacancy\IndexVacancyRequest;
 use App\Http\Requests\Vacancy\StoreVacancyRequest;
 use App\Http\Requests\Vacancy\UpdateVacancyRequest;
@@ -44,8 +45,12 @@ class VacancyController extends Controller
         return response()->json(new VacancyResource($updatedVacancy), 200);
     }
 
-    public function destroy(Vacancy $vacancy)
-    {
+    public function destroy(
+        DestroyVacancyRequest $request,
+        Vacancy $vacancy
+    ) {
+        $request->validated();
+
         return response()->json($vacancy->delete(), 204);
     }
 }

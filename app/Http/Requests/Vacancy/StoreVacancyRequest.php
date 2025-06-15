@@ -6,6 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreVacancyRequest extends FormRequest
 {
+    public function authorize()
+    {
+        return auth()->user()->isRecruiter();
+    }
+
     public function rules(): array
     {
         return [
@@ -14,7 +19,6 @@ class StoreVacancyRequest extends FormRequest
             'salary' => ['required', 'numeric', 'min:0'],
             'type' => ['required', 'string', 'in:employee,independent_contractor,freelancer'],
             'status' => ['required', 'string', 'in:open,closed,paused'],
-            'recruiter_id' => ['required', 'exists:users,id,type,recruiter'],
         ];
     }
 }

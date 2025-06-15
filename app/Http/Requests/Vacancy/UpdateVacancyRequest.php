@@ -6,10 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateVacancyRequest extends FormRequest
 {
-    //    public function authorize(): bool
-    //    {
-    //        return $this->user()->isRecruiter();
-    //    }
+    public function authorize(): bool
+    {
+        return $this->user()->isRecruiter();
+    }
+
     public function rules(): array
     {
         return [
@@ -18,7 +19,6 @@ class UpdateVacancyRequest extends FormRequest
             'salary' => ['nullable', 'numeric', 'min:0'],
             'status' => ['nullable', 'string', 'in:open,closed,paused'],
             'type' => ['nullable', 'string', 'in:employee,independent_contract,freelancer'],
-            'recruiter_id' => ['nullable', 'exists:users,id,type,recruiter'],
         ];
     }
 }
