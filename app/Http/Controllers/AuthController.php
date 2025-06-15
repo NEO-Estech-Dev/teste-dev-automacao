@@ -2,20 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Services\UserService;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
+    public function __construct(private UserService $userService) {}
+
+    public function register(CreateUserRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $user = $this->userService->create($data);
+
+        return response()->json(
+            [
+                'message' => 'User created successfully',
+                'user' => $user,
+                'status' => 200
+            ],
+        );
+    }
+
     public function login(LoginRequest $request)
     {
         $validated = $request->validated();
 
         if (Auth::attempt($validated)) {
-            $user = User::where('email', $validated['email'])->first();
+            $user = $this->userService->findUserByEmail($validated['email']);
 
             $user->tokens()->delete();
 

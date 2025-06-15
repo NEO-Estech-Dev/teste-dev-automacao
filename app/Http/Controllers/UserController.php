@@ -2,22 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\ListUsersRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class UserController extends Controller
 {
-    private UserService $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
-    }
+    public function __construct(private UserService $userService) {}
 
     public function list(ListUsersRequest $request): JsonResponse
     {
@@ -26,21 +19,6 @@ class UserController extends Controller
         $users = $this->userService->list($param);
 
         return response()->json($users->items());
-    }
-
-    public function create(CreateUserRequest $request): JsonResponse
-    {
-        $data = $request->validated();
-
-        $user = $this->userService->create($data);
-
-        return response()->json(
-            [
-                'message' => 'User created successfully',
-                'user' => $user,
-                'status' => 200
-            ],
-        );
     }
 
     public function update(UpdateUserRequest $request, int $id): JsonResponse
@@ -68,5 +46,12 @@ class UserController extends Controller
                 'status' => 200
             ],
         );
+    }
+
+    public function findUserByEmail($email): JsonResponse
+    {
+        $user = $this->userService->findUserByEmail($email);
+
+        return response()->json($user);
     }
 }

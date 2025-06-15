@@ -3,12 +3,15 @@
 namespace App\Http\Services;
 
 use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserService
 {
-    public function list(array $param)
+    public function __construct(private User $user) {}
+
+    public function list(array $param): LengthAwarePaginator
     {
-        $query = User::query();
+        $query = $this->user->query();
 
         $filters = [
             'email' => fn($value) => $query->where('email', 'like', '%' . $value . '%'),
@@ -22,19 +25,24 @@ class UserService
             }
         }
 
+        if (isset($param['order_by'])) {
+            $direction = isset($param['order']) && strtolower($param['order']) === 'desc' ? 'desc' : 'asc';
+            $query->orderBy($param['order_by'], $direction);
+        }
+
         $perPage = $param['paginate'] ?? 20;
 
         return $query->paginate($perPage);
     }
 
-    public function create(array $data)
+    public function create(array $data): User
     {
-        return User::create($data);
+        return $this->user->create($data);
     }
 
-    public function update($id, array $data)
+    public function update(int $id, array $data): User
     {
-        $user = User::find($id);
+        $user = $this->user->find($id);
 
         if (!$user) {
             throw new \Exception('User not found', 404);
@@ -45,9 +53,9 @@ class UserService
         return $user;
     }
 
-    public function delete($userLoggedId, $id)
+    public function delete(int $userLoggedId, int $id): bool
     {
-        $user = User::find($id);
+        $user = $this->user->find($id);
 
         if (!$user) {
             throw new \Exception('User not found', 404);
@@ -58,5 +66,10 @@ class UserService
         }
 
         return $user->delete();
+    }
+
+    public function findUserByEmail(string $email): User
+    {
+        return $this->user->where('email', $email)->first();
     }
 }
