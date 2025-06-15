@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TemperatureController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
 use Illuminate\Support\Facades\Route;
@@ -27,5 +28,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('applicant')->group(function () {
         Route::get('/', [ApplicantController::class, 'index']);
         Route::post('/apply-to-vacancy', [ApplicantController::class, 'applyToVacancy']);
+    });
+
+    Route::prefix('temperature')->group(function () {
+        Route::get('/', [TemperatureController::class, 'index']);
+        Route::post('/', [TemperatureController::class, 'store']);
     });
 });
