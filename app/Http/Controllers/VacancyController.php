@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkVacanciesDeleteRequest;
 use App\Http\Requests\CreateVacancyRequest;
 use App\Http\Requests\ListVacanciesRequest;
 use App\Http\Requests\UpdateVacancyRequest;
@@ -72,6 +73,18 @@ class VacancyController extends Controller
         return response()->json(
             [
                 'message' => 'Vacancy status changed successfully',
+                'status' => 200
+            ],
+        );
+    }
+
+    public function bulkDelete(BulkVacanciesDeleteRequest $request): JsonResponse
+    {
+        $this->vacancyService->bulkDelete($request->validated()['ids']);
+
+        return response()->json(
+            [
+                'message' => 'Vacancies deleted successfully',
                 'status' => 200
             ],
         );

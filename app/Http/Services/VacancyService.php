@@ -89,4 +89,11 @@ class VacancyService
 
         return $vacancy;
     }
+
+    public function bulkDelete(array $ids)
+    {
+        $this->vacancy->whereIn('id', $ids)->delete();
+
+        return true;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkUsersDeleteRequest;
 use App\Http\Requests\ListUsersRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Services\UserService;
@@ -53,5 +54,17 @@ class UserController extends Controller
         $user = $this->userService->findUserByEmail($email);
 
         return response()->json($user);
+    }
+
+    public function bulkDelete(BulkUsersDeleteRequest $request): JsonResponse
+    {
+        $this->userService->bulkDelete($request->validated()['ids']);
+
+        return response()->json(
+            [
+                'message' => 'Users deleted successfully',
+                'status' => 200
+            ],
+        );
     }
 }

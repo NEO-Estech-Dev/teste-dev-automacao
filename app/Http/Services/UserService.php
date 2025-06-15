@@ -72,4 +72,11 @@ class UserService
     {
         return $this->user->where('email', $email)->first();
     }
+
+    public function bulkDelete(array $ids): bool
+    {
+        $this->user->whereIn('id', $ids)->delete();
+
+        return true;
+    }
 }
