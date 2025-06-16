@@ -10,7 +10,15 @@ cd teste-dev-backend
 git checkout felipe-jorge-pereira
 ```
 
-## 2. Subindo o Ambiente com Docker
+## 2. Configurando Variáveis de Ambiente
+
+Antes de subir o ambiente, crie o arquivo `.env` a partir do exemplo fornecido:
+
+```bash
+cp .env.example .env
+```
+
+## 3. Subindo o Ambiente com Docker
 
 O projeto utiliza Docker para facilitar a configuração do ambiente. Para iniciar todos os serviços necessários, execute:
 
@@ -20,7 +28,7 @@ docker-compose up -d
 
 O backend estará disponível na porta **80** (ou na porta definida pela variável de ambiente `APP_PORT`).
 
-## 3. Executando Migrations e Seeders
+## 4. Executando Migrations e Seeders
 
 Após subir os containers, acesse o container da aplicação e execute as migrations e seeders para preparar o banco de dados:
 
@@ -29,7 +37,7 @@ docker-compose exec laravel.test bash
 php artisan migrate --seed
 ```
 
-## 4. Importando Arquivo CSV
+## 5. Importando Arquivo CSV
 
 Para importar o arquivo `example.csv` localizado em `storage/app/example.csv`, utilize o comando Artisan:
 
@@ -37,7 +45,7 @@ Para importar o arquivo `example.csv` localizado em `storage/app/example.csv`, u
 php artisan import:csv example.csv
 ```
 
-## 5. Tecnologias e Funcionalidades
+## 6. Tecnologias e Funcionalidades
 
 - **Testes Automatizados:** O projeto possui testes implementados para garantir a qualidade das funcionalidades.
 - **Cache:** Utilização do Redis para cache, otimizando a performance das operações.
