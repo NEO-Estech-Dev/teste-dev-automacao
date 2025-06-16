@@ -12,39 +12,45 @@ class VacancyService
 
     public function create(array $data, int $recruiterId): Vacancy
     {
-        $data['recruiter_id'] = $recruiterId;
-
-        return $this->vacancy->create($data);
+        $vacancy = $this->vacancy->create(array_merge($data, ['recruiter_id' => $recruiterId]));
+        cache()->tags(['vacancies'])->flush();
+        return $vacancy;
     }
 
     public function list(array $param): LengthAwarePaginator
     {
-        $query = $this->vacancy->query()->with('recruiter');
+        $cacheKey = 'vacancies:' . md5(json_encode($param));
 
-        $filters = [
-            'type' => fn($value) => $query->where('type', $value),
-            'status' => fn($value) => $query->where('status', $value),
-            'salary' => fn($value) => $query->where('salary', $value),
-            'recruiter_id' => fn($value) => $query->where('recruiter_id', $value),
-            'title' => fn($value) => $query->where('title', 'like', '%' . $value . '%'),
-            'description' => fn($value) => $query->where('description', 'like', '%' . $value . '%'),
-            'company_name' => fn($value) => $query->where('company_name', 'like', '%' . $value . '%'),
-        ];
+        $query = function () use ($param) {
+            $query = $this->vacancy->query()->with('recruiter');
 
-        foreach ($filters as $key => $filter) {
-            if (isset($param[$key])) {
-                $filter($param[$key]);
+            $filters = [
+                'type' => fn($value) => $query->where('type', $value),
+                'status' => fn($value) => $query->where('status', $value),
+                'salary' => fn($value) => $query->where('salary', $value),
+                'recruiter_id' => fn($value) => $query->where('recruiter_id', $value),
+                'title' => fn($value) => $query->where('title', 'like', '%' . $value . '%'),
+                'description' => fn($value) => $query->where('description', 'like', '%' . $value . '%'),
+                'company_name' => fn($value) => $query->where('company_name', 'like', '%' . $value . '%'),
+            ];
+
+            foreach ($filters as $key => $filter) {
+                if (isset($param[$key])) {
+                    $filter($param[$key]);
+                }
             }
-        }
 
-        if (isset($param['order_by'])) {
-            $direction = isset($param['order']) && strtolower($param['order']) === 'desc' ? 'desc' : 'asc';
-            $query->orderBy($param['order_by'], $direction);
-        }
+            if (isset($param['order_by'])) {
+                $direction = isset($param['order']) && strtolower($param['order']) === 'desc' ? 'desc' : 'asc';
+                $query->orderBy($param['order_by'], $direction);
+            }
 
-        $paginate = $param['paginate'] ?? 20;
+            $paginate = $param['paginate'] ?? 20;
 
-        return $query->paginate($paginate);
+            return $query->paginate($paginate);
+        };
+
+        return cache()->remember($cacheKey, now()->addMinutes(30), $query);
     }
 
     public function update(int $id, array $data)
@@ -56,7 +62,7 @@ class VacancyService
         }
 
         $vacancy->update($data);
-
+        cache()->tags(['vacancies'])->flush();
         return $vacancy;
     }
 
@@ -73,7 +79,7 @@ class VacancyService
         }
 
         $vacancy->delete();
-
+        cache()->tags(['vacancies'])->flush();
         return true;
     }
 
@@ -86,14 +92,14 @@ class VacancyService
         }
 
         $vacancy->update(['status' => $vacancy->status === 'active' ? 'inactive' : 'active']);
-
+        cache()->tags(['vacancies'])->flush();
         return $vacancy;
     }
 
     public function bulkDelete(array $ids)
     {
         $this->vacancy->whereIn('id', $ids)->delete();
-
+        cache()->tags(['vacancies'])->flush();
         return true;
     }
 }
