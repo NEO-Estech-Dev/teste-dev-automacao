@@ -2,7 +2,7 @@
 
 namespace App\Http\Services;
 
-use App\Enums\Enums\UserType;
+use App\Enums\UserType;
 use App\Models\Vacancy;
 use Illuminate\Pagination\LengthAwarePaginator;
 

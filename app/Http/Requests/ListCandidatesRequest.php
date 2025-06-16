@@ -2,20 +2,15 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\UserType;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 
-class BulkVacanciesDeleteRequest extends FormRequest
+class ListCandidatesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        if ($this->user()->type != UserType::RECRUITER->value) {
-            throw new AuthorizationException('Only recruiters can delete vacancies.');
-        }
         return true;
     }
 
@@ -27,8 +22,14 @@ class BulkVacanciesDeleteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ids' => 'required|array|min:1',
-            'ids.*' => 'required|integer|exists:vacancies,id'
+            'paginate' => 'nullable|integer|min:1',
+            'status' => 'nullable|string',
+            'vacancy_id' => 'nullable|integer',
+            'user_id' => 'nullable|integer',
+            'candidate_name' => 'nullable|string',
+            'vacancy_title' => 'nullable|string',
+            'order_by' => 'nullable|string',
+            'order' => 'nullable|string|in:asc,desc',
         ];
     }
 }

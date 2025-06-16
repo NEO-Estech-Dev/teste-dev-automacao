@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
 use Illuminate\Http\Request;
@@ -13,9 +14,9 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/register', [AuthController::class, 'register'])->name('user.register');
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/register', [AuthController::class, 'register'])->name('user.register');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     });
 });
@@ -34,7 +35,18 @@ Route::prefix('vacancy')->group(function () {
         Route::post('/create', [VacancyController::class, 'create'])->name('vacancy.create');
         Route::put('/update/{id}', [VacancyController::class, 'update'])->name('vacancy.update');
         Route::delete('/delete/{id}', [VacancyController::class, 'delete'])->name('vacancy.delete');
-        Route::put('/change-status/{id}', [VacancyController::class, 'changeStatus'])->name('vacancy.changeStatus');
         Route::delete('/bulk-delete', [VacancyController::class, 'bulkDelete'])->name('vacancy.bulkDelete');
+        Route::put('/change-status/{id}', [VacancyController::class, 'changeStatus'])->name('vacancy.changeStatus');
+    });
+});
+
+Route::prefix('candidate')->group(function () {
+    Route::get('/list', [CandidateController::class, 'list'])->name('candidate.list');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/apply/{vacancyId}', [CandidateController::class, 'apply'])->name('candidate.apply');
+        Route::put('/update-status/{id}', [CandidateController::class, 'updateCandidateStatus'])->name('candidate.updateCandidateStatus');
+        Route::delete('/delete/{id}', [CandidateController::class, 'delete'])->name('candidate.delete');
+        Route::delete('/bulk-delete', [CandidateController::class, 'bulkDelete'])->name('candidate.bulkDelete');
     });
 });

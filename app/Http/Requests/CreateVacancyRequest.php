@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\Enums\UserType;
+use App\Enums\UserType;
 use App\Enums\VacancyType;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
