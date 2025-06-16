@@ -6,11 +6,16 @@ use App\Http\Requests\BulkUsersDeleteRequest;
 use App\Http\Requests\ListUsersRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Services\UserService;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __construct(private UserService $userService) {}
 
     public function list(ListUsersRequest $request): JsonResponse
@@ -19,21 +24,22 @@ class UserController extends Controller
 
         $users = $this->userService->list($param);
 
-        return response()->json($users->items());
+        return response()->json($users->items(), Response::HTTP_OK);
     }
 
-    public function update(UpdateUserRequest $request, int $id): JsonResponse
+    public function update(UpdateUserRequest $request): JsonResponse
     {
         $data = $request->validated();
+        $userId = $request->user()->id;
 
-        $user = $this->userService->update($id, $data);
+        $user = $this->userService->update($userId, $data);
 
         return response()->json(
             [
                 'message' => 'User updated successfully',
                 'user' => $user,
-                'status' => 200
             ],
+            Response::HTTP_OK
         );
     }
 
@@ -44,8 +50,8 @@ class UserController extends Controller
         return response()->json(
             [
                 'message' => 'User deleted successfully',
-                'status' => 200
             ],
+            Response::HTTP_NO_CONTENT
         );
     }
 
@@ -53,18 +59,20 @@ class UserController extends Controller
     {
         $user = $this->userService->findUserByEmail($email);
 
-        return response()->json($user);
+        return response()->json($user, Response::HTTP_OK);
     }
 
     public function bulkDelete(BulkUsersDeleteRequest $request): JsonResponse
     {
+        $this->authorize('bulkDelete', User::class);
+
         $this->userService->bulkDelete($request->validated()['ids']);
 
         return response()->json(
             [
                 'message' => 'Users deleted successfully',
-                'status' => 200
             ],
+            Response::HTTP_NO_CONTENT
         );
     }
 }

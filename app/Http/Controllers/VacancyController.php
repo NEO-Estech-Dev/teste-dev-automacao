@@ -7,16 +7,22 @@ use App\Http\Requests\CreateVacancyRequest;
 use App\Http\Requests\ListVacanciesRequest;
 use App\Http\Requests\UpdateVacancyRequest;
 use App\Http\Services\VacancyService;
+use App\Models\Vacancy;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class VacancyController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __construct(private VacancyService $vacancyService) {}
 
     public function create(CreateVacancyRequest $request): JsonResponse
     {
+        $this->authorize('create', Vacancy::class);
+
         $data = $request->validated();
 
         $vacancy = $this->vacancyService->create($data, $request->user()->id);
@@ -25,8 +31,8 @@ class VacancyController extends Controller
             [
                 'message' => 'Vacancy created successfully',
                 'vacancy' => $vacancy,
-                'status' => 200
             ],
+            Response::HTTP_CREATED
         );
     }
 
@@ -36,11 +42,13 @@ class VacancyController extends Controller
 
         $vacancies = $this->vacancyService->list($param);
 
-        return response()->json($vacancies);
+        return response()->json($vacancies, Response::HTTP_OK);
     }
 
     public function update(UpdateVacancyRequest $request, int $id): JsonResponse
     {
+        $this->authorize('update', Vacancy::class);
+
         $data = $request->validated();
 
         $vacancy = $this->vacancyService->update($id, $data);
@@ -49,44 +57,52 @@ class VacancyController extends Controller
             [
                 'message' => 'Vacancy updated successfully',
                 'vacancy' => $vacancy,
-                'status' => 200
             ],
+            Response::HTTP_OK
         );
     }
 
-    public function delete(Request $request, int $id): JsonResponse
+    public function delete(int $id): JsonResponse
     {
-        $this->vacancyService->delete($request->user()->type, $id);
+        $this->authorize('delete', Vacancy::class);
+
+        $this->vacancyService->delete($id);
 
         return response()->json(
             [
                 'message' => 'Vacancy deleted successfully',
-                'status' => 200
             ],
+            Response::HTTP_NO_CONTENT
         );
     }
 
     public function changeStatus(int $id): JsonResponse
     {
+        $this->authorize('changeStatus', Vacancy::class);
+
         $this->vacancyService->changeStatus($id);
 
         return response()->json(
             [
                 'message' => 'Vacancy status changed successfully',
-                'status' => 200
             ],
+            Response::HTTP_OK
         );
     }
 
     public function bulkDelete(BulkVacanciesDeleteRequest $request): JsonResponse
     {
-        $this->vacancyService->bulkDelete($request->validated()['ids']);
+        $this->authorize('bulkDelete', Vacancy::class);
+
+        $ids = $request->validated()['ids'];
+
+        $this->vacancyService->bulkDelete($ids);
 
         return response()->json(
             [
                 'message' => 'Vacancies deleted successfully',
-                'status' => 200
             ],
+            Response::HTTP_NO_CONTENT
         );
     }
 }

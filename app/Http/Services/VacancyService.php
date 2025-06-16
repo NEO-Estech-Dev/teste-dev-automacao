@@ -66,12 +66,8 @@ class VacancyService
         return $vacancy;
     }
 
-    public function delete(string $userType, int $id)
+    public function delete(int $id)
     {
-        if ($userType != UserType::RECRUITER->value) {
-            throw new \Exception('You are not authorized to delete this vacancy.', 403);
-        }
-
         $vacancy = $this->vacancy->find($id);
 
         if (!$vacancy) {

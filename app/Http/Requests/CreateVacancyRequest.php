@@ -14,9 +14,6 @@ class CreateVacancyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if ($this->user()->type != UserType::RECRUITER->value) {
-            throw new AuthorizationException('Only recruiters can create vacancies.');
-        }
         return true;
     }
 

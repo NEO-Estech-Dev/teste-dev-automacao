@@ -24,7 +24,7 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::get('/list', [UserController::class, 'list'])->name('user.list');
-    Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::put('/update', [UserController::class, 'update'])->name('user.update');
     Route::delete('/delete/{id}', [UserController::class, 'delete'])->name('user.delete');
     Route::delete('/bulk-delete', [UserController::class, 'bulkDelete'])->name('user.bulkDelete');
 });

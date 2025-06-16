@@ -47,9 +47,9 @@ class UserService
         return $this->user->create($data);
     }
 
-    public function update(int $id, array $data): User
+    public function update(int $userId, array $data): User
     {
-        $user = $this->user->find($id);
+        $user = $this->user->find($userId);
 
         if (!$user) {
             throw new \Exception('User not found', 404);

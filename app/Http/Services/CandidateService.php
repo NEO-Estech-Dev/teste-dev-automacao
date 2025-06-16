@@ -2,7 +2,6 @@
 
 namespace App\Http\Services;
 
-use App\Enums\UserType;
 use App\Models\Candidate;
 use App\Models\Vacancy;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -58,7 +57,7 @@ class CandidateService
 
         $candidate = $this->candidate->create($data);
         cache()->tags(['candidates'])->flush();
-        return $candidate;
+        return $candidate->load(['user', 'vacancy']);
     }
 
     public function updateCandidateStatus(int $id, array $data)
@@ -74,12 +73,8 @@ class CandidateService
         return $candidate;
     }
 
-    public function delete(string $userType, int $id)
+    public function delete(int $id)
     {
-        if ($userType != UserType::RECRUITER->value) {
-            throw new \Exception('You are not authorized to delete this candidate.', 403);
-        }
-
         $candidate = $this->candidate->find($id);
 
         if (!$candidate) {
