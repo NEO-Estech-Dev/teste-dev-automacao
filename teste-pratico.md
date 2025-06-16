@@ -1,82 +1,52 @@
-#  Teste para candidatos à vaga de Desenvolvedor PHP Estech
+# Guia de Inicialização do Projeto
 
-Olá caro desenvolvedor, nesse teste analisaremos seu conhecimento geral e inclusive velocidade de desenvolvimento. Abaixo explicaremos tudo o que será necessário.
+## 1. Clonando o Projeto
 
-##  Instruções
+Clone o repositório para sua máquina local:
 
-O desafio consiste em implementar uma aplicação API Rest utilizando o framework PHP Laravel, um banco de dados relacional (Mysql), que terá como finalidade a inscrição de candidatos a uma oportunidade de emprego.
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd teste-dev-backend
+```
 
-Sua aplicação deve possuir:
+## 2. Subindo o Ambiente com Docker
 
-- CRUD de usuários:
-	- Criar, editar, excluir e listar usuários.
-	- O usuário pode ser Recrutador ou Candidato.
+O projeto utiliza Docker para facilitar a configuração do ambiente. Para iniciar todos os serviços necessários, execute:
 
-- CRUD de vagas:
-	- Criar, editar, excluir e listar vagas.
-	- A vaga pode ser CLT, Pessoa Jurídica ou Freelancer.
+```bash
+docker-compose up -d
+```
 
-- CRUD de candidatos:
-	- Criar, editar, excluir e listar candidatos.
-	- Um candidato pode se inscrever em uma ou mais vagas.
-	- Deve ser ser possível "pausar" a vaga, evitando a inscrição de candidatos (Somente Recrutador).
+O backend estará disponível na porta **80** (ou na porta definida pela variável de ambiente `APP_PORT`).
 
-- Cada CRUD:
-	- Deve ser filtrável e ordenável por qualquer campo, e possuir paginação de 20 itens.
-	- Deve implementar SoftDelete.
-	- Implementar validações de campos obrigatórios e tipos de dados.
-	- Implementar Cache utilizando Redis.
-	- Testes automatizados.
+## 3. Executando Migrations e Seeders
 
-- Criar um comando para importação de dados a partir [deste arquivo](/example.csv) csv:
-	- Deve ser implementado de maneira assincrona, utilizando Jobs. 	
-	- Criar a tabela para armazenar os dados a serem importados.		 	
-	- Criar um endpoint para retornar uma análise dos dados importados e executar os seguintes cálculos:
-		- Separar os cálculos pelo dia da data registrada.
-		- Média.
-		- Mediana.
-		- Valor mínimo.
-		- Valor máximo.
-		- % acima de 10.
-		- % abaixo de -10.
-		- % entre -10 e 10.
+Após subir os containers, acesse o container da aplicação e execute as migrations e seeders para preparar o banco de dados:
 
-##  Banco de dados
+```bash
+docker-compose exec laravel.test bash
+php artisan migrate --seed
+```
 
-- O banco de dados deve ser criado utilizando Migrations do framework Laravel, e também utilizar Seeds e Factorys para popular as informações no banco de dados.
+## 4. Importando Arquivo CSV
 
-##  Tecnologias a serem utilizadas
+Para importar o arquivo `example.csv` localizado em `storage/app/example.csv`, utilize o comando Artisan:
 
-Devem ser utilizadas as seguintes tecnologias:
-	- PHP
-	- Framework Laravel
-	- Docker (construção do ambiente de desenvolvimento)
-	- Mysql
-	- Redis
- 	- Supervisor
+```bash
+php artisan import:csv example.csv
+```
 
-##  Entrega
+## 5. Tecnologias e Funcionalidades
 
-- Para iniciar o teste, faça um fork deste repositório; **Se você apenas clonar o repositório não vai conseguir fazer push.**
+- **Testes Automatizados:** O projeto possui testes implementados para garantir a qualidade das funcionalidades.
+- **Cache:** Utilização do Redis para cache, otimizando a performance das operações.
+- **Filas:** Processamento assíncrono de tarefas utilizando Supervisor para gerenciamento das filas.
+- **Banco de Dados:** MySQL como sistema gerenciador de banco de dados relacional.
+- **Framework:** Laravel 12 rodando com PHP 8.2.
+- **Autorização:** Controle de acesso implementado via Policies do Laravel.
+- **Regra de Negócio:** Por regra do negócio, as ações ideais de administradores estão atribuídas ao papel de **recrutador**, que exerce essas permissões no sistema.
+- **Seeders:** As seeders configuram um starter pack com dados iniciais para facilitar a utilização do projeto, incluindo usuários de teste (candidato e recrutador) e vagas de exemplo.
 
-- Crie uma branch com o seu nome completo;
-- Altere o arquivo teste-pratico.md com as informações necessárias para executar o seu teste (comandos, migrations, seeds, etc);
+---
 
-- Depois de finalizado, envie-nos o pull request;
-
-##  Bônus
-
-- Permitir deleção em massa de itens nos CRUDs.
-- Permitir que o número de itens por página possa ser definido.
-- Implementar autenticação de usuário na aplicação usando sanctum.
-
-##  O que será analisado?
-
-- Organização do código;
-- Aplicação de design patterns;
-- Raciocínio lógico;
-- Aplicação de testes;
-- Legibilidade;
-- Criação do ambiente com Docker.
-
-###  Boa sorte!
+Siga os passos acima para iniciar e utilizar o projeto corretamente.
