@@ -11,7 +11,6 @@ class VacancyControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    private $token;
     private $recruiter;
 
     protected function setUp(): void
@@ -23,13 +22,6 @@ class VacancyControllerTest extends TestCase
             'password' => bcrypt('password'),
             'type' => 'recruiter'
         ]);
-
-        $response = $this->postJson('/api/auth/login', [
-            'email' => 'recruiter@test.com',
-            'password' => 'password'
-        ]);
-
-        $this->token = $response->json('token');
     }
 
     public function testListVacanciesReturnsVacancies()
@@ -77,7 +69,7 @@ class VacancyControllerTest extends TestCase
 
     public function testCreateVacancyValidatesInput()
     {
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->recruiter)
             ->postJson('/api/vacancy/create', [
                 'title' => '',
                 'type' => 'INVALID_TYPE',
@@ -98,14 +90,13 @@ class VacancyControllerTest extends TestCase
             'salary' => 5000
         ];
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->recruiter)
             ->postJson('/api/vacancy/create', $vacancyData);
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson([
                 'message' => 'Vacancy created successfully',
-                'vacancy' => $vacancyData,
-                'status' => 200
+                'vacancy' => $vacancyData
             ]);
 
         $this->assertDatabaseHas('vacancies', array_merge($vacancyData, [
@@ -125,7 +116,7 @@ class VacancyControllerTest extends TestCase
             'description' => 'Updated Description'
         ];
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->recruiter)
             ->putJson('/api/vacancy/update/' . $vacancy->id, $updateData);
 
         $response->assertStatus(200)
@@ -142,8 +133,7 @@ class VacancyControllerTest extends TestCase
                     'recruiter_id' => $vacancy->recruiter_id,
                     'created_at' => $vacancy->created_at->toJSON(),
                     'updated_at' => $vacancy->updated_at->toJSON()
-                ],
-                'status' => 200
+                ]
             ]);
 
         $this->assertDatabaseHas('vacancies', array_merge($updateData, [
@@ -157,10 +147,10 @@ class VacancyControllerTest extends TestCase
             'recruiter_id' => $this->recruiter->id
         ]);
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->recruiter)
             ->deleteJson('/api/vacancy/delete/' . $vacancy->id);
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
         $this->assertSoftDeleted('vacancies', ['id' => $vacancy->id]);
     }
 
@@ -171,12 +161,12 @@ class VacancyControllerTest extends TestCase
         ]);
         $vacancyIds = $vacancies->pluck('id')->toArray();
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->recruiter)
             ->deleteJson('/api/vacancy/bulk-delete', [
                 'ids' => $vacancyIds
             ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         foreach ($vacancyIds as $id) {
             $this->assertSoftDeleted('vacancies', ['id' => $id]);
@@ -190,13 +180,12 @@ class VacancyControllerTest extends TestCase
             'status' => 'active'
         ]);
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->recruiter)
             ->putJson('/api/vacancy/change-status/' . $vacancy->id);
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Vacancy status changed successfully',
-                'status' => 200
+                'message' => 'Vacancy status changed successfully'
             ]);
 
         $this->assertDatabaseHas('vacancies', [

@@ -22,20 +22,13 @@ class UserControllerTest extends TestCase
             'password' => bcrypt('password'),
             'type' => 'recruiter'
         ]);
-
-        $response = $this->postJson('/api/auth/login', [
-            'email' => 'recruiter@test.com',
-            'password' => 'password'
-        ]);
-
-        $this->token = $response->json('token');
     }
 
     public function testListUsersReturnsUsers()
     {
         User::factory()->count(3)->create();
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->user)
             ->getJson('/api/user/list');
 
         $response->assertStatus(200)
@@ -51,8 +44,8 @@ class UserControllerTest extends TestCase
 
     public function testUpdateUserValidatesInput()
     {
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
-            ->putJson('/api/user/update/' . $this->user->id, [
+        $response = $this->actingAs($this->user)
+            ->putJson('/api/user/update', [
                 'email' => 'invalid-email'
             ]);
 
@@ -62,8 +55,8 @@ class UserControllerTest extends TestCase
 
     public function testUpdateUserUpdatesSuccessfully()
     {
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
-            ->putJson('/api/user/update/' . $this->user->id, [
+        $response = $this->actingAs($this->user)
+            ->putJson('/api/user/update', [
                 'name' => 'Updated Name',
                 'email' => 'updated@test.com'
             ]);
@@ -75,8 +68,7 @@ class UserControllerTest extends TestCase
                     'name' => 'Updated Name',
                     'email' => 'updated@test.com',
                     'type' => 'recruiter'
-                ],
-                'status' => 200
+                ]
             ]);
 
         $this->assertDatabaseHas('users', [
@@ -88,10 +80,10 @@ class UserControllerTest extends TestCase
 
     public function testDeleteUserDeletesSuccessfully()
     {
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->user)
             ->deleteJson('/api/user/delete/' . $this->user->id);
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
         $this->assertSoftDeleted('users', ['id' => $this->user->id]);
     }
 
@@ -100,12 +92,12 @@ class UserControllerTest extends TestCase
         $users = User::factory()->count(3)->create();
         $userIds = $users->pluck('id')->toArray();
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->user)
             ->deleteJson('/api/user/bulk-delete', [
                 'ids' => $userIds
             ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         foreach ($userIds as $id) {
             $this->assertSoftDeleted('users', ['id' => $id]);

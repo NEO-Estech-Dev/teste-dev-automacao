@@ -90,7 +90,7 @@ class CandidateControllerTest extends TestCase
 
     public function testApplyVacancyRequiresCandidateAccount()
     {
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->recruiter)
             ->postJson('/api/candidate/apply/' . $this->vacancy->id);
 
         $response->assertStatus(403);
@@ -98,18 +98,12 @@ class CandidateControllerTest extends TestCase
 
     public function testUpdateCandidateStatusRequiresRecruiterAccount()
     {
-        $response = $this->postJson('/api/auth/login', [
-            'email' => 'candidate@test.com',
-            'password' => 'password'
-        ]);
-        $candidateToken = $response->json('token');
-
         $candidate = Candidate::factory()->create([
             'user_id' => $this->candidate->id,
             'vacancy_id' => $this->vacancy->id
         ]);
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $candidateToken)
+        $response = $this->actingAs($this->candidate)
             ->putJson('/api/candidate/update-status/' . $candidate->id, [
                 'status' => 'shortlisted'
             ]);
@@ -124,10 +118,10 @@ class CandidateControllerTest extends TestCase
             'vacancy_id' => $this->vacancy->id
         ]);
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->recruiter)
             ->deleteJson('/api/candidate/delete/' . $candidate->id);
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
         $this->assertSoftDeleted('candidates', ['id' => $candidate->id]);
     }
 
@@ -139,15 +133,48 @@ class CandidateControllerTest extends TestCase
         ]);
         $candidateIds = $candidates->pluck('id')->toArray();
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $this->token)
+        $response = $this->actingAs($this->recruiter)
             ->deleteJson('/api/candidate/bulk-delete', [
                 'ids' => $candidateIds
             ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         foreach ($candidateIds as $id) {
             $this->assertSoftDeleted('candidates', ['id' => $id]);
         }
+    }
+
+    public function testApplyVacancyAsCandidate()
+    {
+        $response = $this->actingAs($this->candidate)
+            ->postJson('/api/candidate/apply/' . $this->vacancy->id, [
+                'curriculum_url' => 'https://example.com/curriculum.pdf'
+            ]);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'message',
+                'candidate'
+            ]);
+    }
+
+    public function testUpdateCandidateStatusAsRecruiter()
+    {
+        $candidate = Candidate::factory()->create([
+            'user_id' => $this->candidate->id,
+            'vacancy_id' => $this->vacancy->id
+        ]);
+
+        $response = $this->actingAs($this->recruiter)
+            ->putJson('/api/candidate/update-status/' . $candidate->id, [
+                'status' => 'shortlisted'
+            ]);
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'candidate'
+            ]);
     }
 }
