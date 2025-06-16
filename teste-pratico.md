@@ -47,6 +47,7 @@ php artisan import:csv example.csv
 - **Autorização:** Controle de acesso implementado via Policies do Laravel.
 - **Regra de Negócio:** Por regra do negócio, as ações ideais de administradores estão atribuídas ao papel de **recrutador**, que exerce essas permissões no sistema.
 - **Seeders:** As seeders configuram um starter pack com dados iniciais para facilitar a utilização do projeto, incluindo usuários de teste (candidato e recrutador) e vagas de exemplo.
+- **Documentação de API:** A collection do Postman para testar os endpoints da API está disponível no arquivo `Teste Dev Backend.postman_collection.json`.
 
 ---
 
