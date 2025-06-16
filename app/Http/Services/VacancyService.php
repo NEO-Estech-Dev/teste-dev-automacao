@@ -19,7 +19,7 @@ class VacancyService
 
     public function list(array $param): LengthAwarePaginator
     {
-        $query = $this->vacancy->query();
+        $query = $this->vacancy->query()->with('recruiter');
 
         $filters = [
             'type' => fn($value) => $query->where('type', $value),

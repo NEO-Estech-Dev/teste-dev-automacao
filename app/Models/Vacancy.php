@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Enums\VacancyType;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vacancy extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -21,9 +22,7 @@ class Vacancy extends Model
     ];
 
     protected $hidden = [
-        'deleted_at',
-        'created_at',
-        'updated_at',
+        'deleted_at'
     ];
 
     protected function casts(): array
