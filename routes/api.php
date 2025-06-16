@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\ImportAnalysisController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VacancyController;
 use Illuminate\Http\Request;
@@ -50,3 +51,5 @@ Route::prefix('candidate')->group(function () {
         Route::delete('/bulk-delete', [CandidateController::class, 'bulkDelete'])->name('candidate.bulkDelete');
     });
 });
+
+Route::post('analysis-import', [ImportAnalysisController::class, 'analysis'])->name('import.analysis');

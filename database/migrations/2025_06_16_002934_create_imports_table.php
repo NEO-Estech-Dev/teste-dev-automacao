@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('candidates', function (Blueprint $table) {
+        Schema::create('imports', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('vacancy_id')->constrained('vacancies')->onDelete('cascade');
-
-            $table->enum('status', ['pending', 'shortlisted', 'rejected', 'hired'])->default('pending');
-            $table->string('curriculum_url')->nullable();
+            $table->datetime('date');
+            $table->float('temperature');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('candidates');
+        Schema::dropIfExists('imports');
     }
 };
