@@ -5,8 +5,9 @@
 Clone o repositório para sua máquina local:
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/Felipe1208/teste-dev-backend.git
 cd teste-dev-backend
+git checkout felipe-jorge-pereira
 ```
 
 ## 2. Subindo o Ambiente com Docker
@@ -42,7 +43,7 @@ php artisan import:csv example.csv
 - **Cache:** Utilização do Redis para cache, otimizando a performance das operações.
 - **Filas:** Processamento assíncrono de tarefas utilizando Supervisor para gerenciamento das filas.
 - **Banco de Dados:** MySQL como sistema gerenciador de banco de dados relacional.
-- **Framework:** Laravel 12 rodando com PHP 8.2.
+- **Framework:** Laravel 12 rodando com PHP 8.4.
 - **Autorização:** Controle de acesso implementado via Policies do Laravel.
 - **Regra de Negócio:** Por regra do negócio, as ações ideais de administradores estão atribuídas ao papel de **recrutador**, que exerce essas permissões no sistema.
 - **Seeders:** As seeders configuram um starter pack com dados iniciais para facilitar a utilização do projeto, incluindo usuários de teste (candidato e recrutador) e vagas de exemplo.
