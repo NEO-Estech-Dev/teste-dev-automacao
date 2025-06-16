@@ -18,13 +18,6 @@ Antes de subir o ambiente, crie o arquivo `.env` a partir do exemplo fornecido:
 cp .env.example .env
 ```
 
-Em seguida, instale as dependências do projeto e gere a chave da aplicação:
-
-```bash
-composer install
-php artisan key:generate
-```
-
 ## 3. Subindo o Ambiente com Docker
 
 O projeto utiliza Docker para facilitar a configuração do ambiente. Para iniciar todos os serviços necessários, execute:
@@ -33,7 +26,17 @@ O projeto utiliza Docker para facilitar a configuração do ambiente. Para inici
 docker-compose up -d
 ```
 
-O backend estará disponível na porta **80** (ou na porta definida pela variável de ambiente `APP_PORT`).
+Utilize o comando abaixo para gerar a chave única da aplicação:
+```bash
+php artisan key:generate
+```
+
+As dependências serão instaladas automaticamente.
+Caso queira instalar manualmente, o comando é o seguinte (dentro do container):
+
+```bash
+composer install
+```
 
 ## 4. Executando Migrations e Seeders
 
