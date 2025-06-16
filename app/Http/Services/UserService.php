@@ -60,12 +60,8 @@ class UserService
         return $user;
     }
 
-    public function delete(int $authUserId, int $id): bool
+    public function delete(int $id): bool
     {
-        if ($authUserId !== $id) {
-            throw new \Exception('You can only delete your own account.', 403);
-        }
-
         $user = $this->user->find($id);
 
         if (!$user) {

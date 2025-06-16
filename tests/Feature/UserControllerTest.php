@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     private $token;
     private $user;
@@ -81,7 +81,7 @@ class UserControllerTest extends TestCase
     public function testDeleteUserDeletesSuccessfully()
     {
         $response = $this->actingAs($this->user)
-            ->deleteJson('/api/user/delete/' . $this->user->id);
+            ->deleteJson('/api/user/delete');
 
         $response->assertStatus(204);
         $this->assertSoftDeleted('users', ['id' => $this->user->id]);

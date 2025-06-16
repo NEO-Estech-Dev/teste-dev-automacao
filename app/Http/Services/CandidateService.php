@@ -62,26 +62,20 @@ class CandidateService
 
     public function updateCandidateStatus(int $id, array $data)
     {
-        $candidate = $this->candidate->find($id);
-
-        if (!$candidate) {
-            throw new \Exception('Candidate not found', 404);
-        }
+        $candidate = $this->candidate->findOrFail($id);
 
         $candidate->update($data);
+
         cache()->tags(['candidates'])->flush();
         return $candidate;
     }
 
     public function delete(int $id)
     {
-        $candidate = $this->candidate->find($id);
-
-        if (!$candidate) {
-            throw new \Exception('Candidate not found', 404);
-        }
+        $candidate = $this->candidate->findOrFail($id);
 
         $candidate->delete();
+        
         cache()->tags(['candidates'])->flush();
         return true;
     }

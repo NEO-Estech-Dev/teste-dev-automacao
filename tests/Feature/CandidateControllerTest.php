@@ -5,12 +5,12 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Models\Vacancy;
 use App\Models\Candidate;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class CandidateControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     private $token;
     private $recruiter;
@@ -176,5 +176,27 @@ class CandidateControllerTest extends TestCase
                 'message',
                 'candidate'
             ]);
+    }
+
+    public function testUpdateCandidateStatusReturnsNotFoundIfCandidateDoesNotExist()
+    {
+        $nonExistentId = 999999;
+
+        $response = $this->actingAs($this->recruiter)
+            ->putJson('/api/candidate/update-status/' . $nonExistentId, [
+                'status' => 'shortlisted'
+            ]);
+
+        $response->assertStatus(404);
+    }
+
+    public function testDeleteCandidateReturnsNotFoundIfCandidateDoesNotExist()
+    {
+        $nonExistentId = 999999;
+
+        $response = $this->actingAs($this->recruiter)
+            ->deleteJson('/api/candidate/' . $nonExistentId);
+
+        $response->assertStatus(404);
     }
 }
