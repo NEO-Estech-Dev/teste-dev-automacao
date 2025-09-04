@@ -13,10 +13,10 @@ Sua aplicação deve possuir:
 	- Que consuma uma API e popule o banco de dados MYSQL.  	
 
 - Uma rota onde eu consiga ver métricas.
-	- Devo poder escolher a métrica que devo analisar: Ex: hp|attack|defense|special_attack|special_defense|speed|total|height|weight|order
-	- Informar o limite de itens
-	- Trazer apenas uma atributo especifico no top (como nome por exemplo)
-  	- Ordenar por melhores ou piores
+	- Devo poder escolher a métrica que quero analisar: Ex: hp|attack|defense|special_attack|special_defense|speed|total|height|weight|order
+	- Devo poder informar o limite de itens
+	- Devo poder trazer apenas uma atributo especifico no top (como nome por exemplo)
+  	- Devo poder ordenar por melhores ou piores
    
 ##  Banco de dados
 
