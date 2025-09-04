@@ -17,6 +17,7 @@ Sua aplicação deve possuir:
 	- Devo poder informar o limite de itens
 	- Devo poder trazer apenas uma atributo especifico no top (como nome por exemplo)
   	- Devo poder ordenar por melhores ou piores
+  	- Obs: Todos os parametros devem ser opcionais.
    
 ##  Banco de dados
 
