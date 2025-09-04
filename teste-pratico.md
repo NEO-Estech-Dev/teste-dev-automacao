@@ -1,49 +1,26 @@
-#  Teste para candidatos à vaga de Desenvolvedor PHP Estech
+#  Teste para candidatos à vaga de Desenvolvedor PHP/N8N Automação Estech
 
 Olá caro desenvolvedor, nesse teste analisaremos seu conhecimento geral e inclusive velocidade de desenvolvimento. Abaixo explicaremos tudo o que será necessário.
 
 ##  Instruções
 
-O desafio consiste em implementar uma aplicação API Rest utilizando o framework PHP Laravel, um banco de dados relacional (Mysql), que terá como finalidade a inscrição de candidatos a uma oportunidade de emprego.
+O desafio consiste em implementar uma aplicação API Rest utilizando o framework PHP Laravel, um banco de dados relacional (Mysql), que terá como finalidade a ingestão de dados e metrificação de uma base de pokemons.
+Use a API pública https://pokeapi.co/ para ingestão de dados.
 
 Sua aplicação deve possuir:
 
-- CRUD de usuários:
-	- Criar, editar, excluir e listar usuários.
-	- O usuário pode ser Recrutador ou Candidato.
+- Um Command de ingest de dados:
+	- Que consuma uma API e popule o banco de dados MYSQL.  	
 
-- CRUD de vagas:
-	- Criar, editar, excluir e listar vagas.
-	- A vaga pode ser CLT, Pessoa Jurídica ou Freelancer.
-
-- CRUD de candidatos:
-	- Criar, editar, excluir e listar candidatos.
-	- Um candidato pode se inscrever em uma ou mais vagas.
-	- Deve ser ser possível "pausar" a vaga, evitando a inscrição de candidatos (Somente Recrutador).
-
-- Cada CRUD:
-	- Deve ser filtrável e ordenável por qualquer campo, e possuir paginação de 20 itens.
-	- Deve implementar SoftDelete.
-	- Implementar validações de campos obrigatórios e tipos de dados.
-	- Implementar Cache utilizando Redis.
-	- Testes automatizados.
-
-- Criar um comando para importação de dados a partir [deste arquivo](/example.csv) csv:
-	- Deve ser implementado de maneira assincrona, utilizando Jobs. 	
-	- Criar a tabela para armazenar os dados a serem importados.		 	
-	- Criar um endpoint para retornar uma análise dos dados importados e executar os seguintes cálculos:
-		- Separar os cálculos pelo dia da data registrada.
-		- Média.
-		- Mediana.
-		- Valor mínimo.
-		- Valor máximo.
-		- % acima de 10.
-		- % abaixo de -10.
-		- % entre -10 e 10.
-
+- Uma rota onde eu consiga ver métricas.
+	- Devo poder escolher a métrica que devo analisar: Ex: hp|attack|defense|special_attack|special_defense|speed|total|height|weight|order
+	- Informar o limite de itens
+	- Trazer apenas uma atributo especifico no top (como nome por exemplo)
+  	- Ordenar por melhores ou piores
+   
 ##  Banco de dados
 
-- O banco de dados deve ser criado utilizando Migrations do framework Laravel, e também utilizar Seeds e Factorys para popular as informações no banco de dados.
+- O banco de dados deve ser criado utilizando Migrations do framework Laravel.
 
 ##  Tecnologias a serem utilizadas
 
@@ -52,8 +29,6 @@ Devem ser utilizadas as seguintes tecnologias:
 	- Framework Laravel
 	- Docker (construção do ambiente de desenvolvimento)
 	- Mysql
-	- Redis
- 	- Supervisor
 
 ##  Entrega
 
@@ -66,17 +41,14 @@ Devem ser utilizadas as seguintes tecnologias:
 
 ##  Bônus
 
-- Permitir deleção em massa de itens nos CRUDs.
-- Permitir que o número de itens por página possa ser definido.
 - Implementar autenticação de usuário na aplicação usando sanctum.
 
 ##  O que será analisado?
 
+- Criação e automação do ambiente com Docker;
+- Transformação de dados;
 - Organização do código;
-- Aplicação de design patterns;
 - Raciocínio lógico;
-- Aplicação de testes;
-- Legibilidade;
-- Criação do ambiente com Docker.
+- Performance e otimização de consultas;
 
 ###  Boa sorte!
